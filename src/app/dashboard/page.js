@@ -13,9 +13,7 @@ export default function DashboardPage() {
     const [lastRecords, setLastRecords] = useState([])
     const [loading, setLoading] = useState(true)
 
-    const { data: session, status } = useSession()
-    if (status === "loading") return <div className="w-full flex justify-center">Cargando...</div>
-    if (!session) return <div className="text-center">No autorizado</div>
+    const { data: session } = useSession()
 
     const doctorId = session?.user?.id
     const doctorName = session?.user?.name

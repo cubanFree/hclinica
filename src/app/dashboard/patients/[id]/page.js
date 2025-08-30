@@ -7,9 +7,7 @@ import { useSession } from "next-auth/react"
 
 export default function PatientProfile({ params }) {
 
-    const { data: session, status } = useSession()
-    if (status === "loading") return <div className="w-full flex justify-center">Cargando...</div>
-    if (!session) return <div className="text-center">No autorizado</div>
+    const { data: session } = useSession()
 
     const doctorId = session?.user?.id
 
