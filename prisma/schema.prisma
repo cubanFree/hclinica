@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Doctor {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  name          String
+  password      String // hash bcrypt
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  patients      Patient[]
+  consultations Consultation[]
+}
+
+model Patient {
+  id            String         @id @default(cuid())
+  firstName     String
+  lastName      String
+  cedula        String         @unique
+  age           Int
+  sex           String // "M" | "F" | "Otro" si quieres restringir, usar enum
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  doctorId      String
+  doctor        Doctor         @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  consultations Consultation[]
+
+  @@index([lastName, firstName])
+  @@index([cedula])
+}
+
+model Consultation {
+  id        String   @id @default(cuid())
+  patientId String
+  doctorId  String
+  // Datos médicos
+  findings  String // datos positivos al examen físico
+  diagnosis String
+  treatment String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  doctor  Doctor  @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+
+  @@index([updatedAt])
+}
