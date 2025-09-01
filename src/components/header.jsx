@@ -3,25 +3,32 @@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 import { signOut } from "next-auth/react"
 import { useState } from "react"
+import { LogOut } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 export default function Header() {
 
     const [loading, setLoading] = useState(false);
+    const router = useRouter();
 
     const handleLogout = async (e) => {
         e.preventDefault();
         setLoading(true);
         await signOut();
-        window.location.href = "/login";
+        router.push("/login");
         setLoading(false);
     }
 
     return (
-        <header className="p-4 w-[850px] mx-auto flex justify-between items-center text-white rounded-b-sm">
-            <h1 className="text-2xl font-bold">Logo</h1>
+        <header className="w-[850px] mx-auto flex justify-between items-center text-white px-6">
+            <img src="/logo.png" alt="Logo" className="h-26 w-auto" />
+
             <AlertDialog>
                 <AlertDialogTrigger asChild>
-                    <span className="text-white hover:text-blue-200 cursor-pointer">Cerrar sesión</span>
+                    <button className="hover:text-red-300 border-2 border-gray-400 px-4 py-1 rounded-xl font-medium text-sm transition-colors flex items-center space-x-2 cursor-pointer">
+                        <span>Cerrar sesión</span>
+                        <LogOut className="w-4 h-4" />
+                    </button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                     <AlertDialogHeader>

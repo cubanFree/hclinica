@@ -11,6 +11,16 @@
   --radius: 0.75rem;
 }
 
+.nunito-sans {
+  font-family: "Nunito Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100,
+    "YTLC" 500;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -129,5 +139,205 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+
+
+/* Fondo clínico con cuadrícula médica */
+.clinical-background {
+  background: linear-gradient(135deg,
+      #f8fafc 0%,
+      #f0f9ff 30%,
+      #e0f2fe 60%,
+      #f8fafc 100%);
+  background-size: 300% 300%;
+  animation: gradientShiftSimple 25s ease infinite;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+/* Cuadrícula de líneas médicas */
+.clinical-background::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    linear-gradient(rgba(59, 130, 246, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 130, 246, 0.02) 1px, transparent 1px);
+  background-size: 30px 30px;
+  animation: linesMove 30s linear infinite;
+  pointer-events: none;
+}
+
+/* Animación del gradiente */
+@keyframes gradientShiftSimple {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Animación de las líneas */
+@keyframes linesMove {
+  0% {
+    transform: translateX(0) translateY(0);
+  }
+
+  100% {
+    transform: translateX(30px) translateY(30px);
+  }
+}
+
+/* Variante con cuadrícula más densa */
+.clinical-background-dense {
+  background: linear-gradient(135deg,
+      #f8fafc 0%,
+      #f0f9ff 30%,
+      #e0f2fe 60%,
+      #f8fafc 100%);
+  background-size: 300% 300%;
+  animation: gradientShiftSimple 25s ease infinite;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+.clinical-background-dense::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+    linear-gradient(rgba(59, 130, 246, 0.01) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 130, 246, 0.01) 1px, transparent 1px);
+  background-size:
+    30px 30px,
+    30px 30px,
+    10px 10px,
+    10px 10px;
+  animation: linesMove 30s linear infinite;
+  pointer-events: none;
+}
+
+/* Variante con cuadrícula más visible */
+.clinical-background-visible {
+  background: linear-gradient(135deg,
+      #f8fafc 0%,
+      #f0f9ff 30%,
+      #e0f2fe 60%,
+      #f8fafc 100%);
+  background-size: 300% 300%;
+  animation: gradientShiftSimple 25s ease infinite;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+.clinical-background-visible::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: linesMoveSlow 40s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes linesMoveSlow {
+  0% {
+    transform: translateX(0) translateY(0);
+  }
+
+  100% {
+    transform: translateX(40px) translateY(40px);
+  }
+}
+
+/* Variante con efecto de profundidad */
+.clinical-background-depth {
+  background: linear-gradient(135deg,
+      #f8fafc 0%,
+      #f0f9ff 30%,
+      #e0f2fe 60%,
+      #f8fafc 100%);
+  background-size: 300% 300%;
+  animation: gradientShiftSimple 25s ease infinite;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+/* Cuadrícula principal */
+.clinical-background-depth::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    linear-gradient(rgba(59, 130, 246, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 130, 246, 0.04) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: linesMove 35s linear infinite;
+  pointer-events: none;
+}
+
+/* Cuadrícula secundaria para profundidad */
+.clinical-background-depth::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    linear-gradient(rgba(59, 130, 246, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 130, 246, 0.015) 1px, transparent 1px);
+  background-size: 15px 15px;
+  animation: linesMoveFast 20s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes linesMoveFast {
+  0% {
+    transform: translateX(0) translateY(0);
+  }
+
+  100% {
+    transform: translateX(15px) translateY(15px);
   }
 }
