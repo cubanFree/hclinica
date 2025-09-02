@@ -20,8 +20,7 @@ export default function PatientHistorial({ params }) {
 
     // Estados de filtros
     const [filters, setFilters] = useState({
-        startDate: "",
-        endDate: "",
+        date: "",
         page: 1
     })
 
@@ -42,8 +41,10 @@ export default function PatientHistorial({ params }) {
                 limit: '5'
             })
 
-            if (currentFilters.startDate) params.append('startDate', currentFilters.startDate)
-            if (currentFilters.endDate) params.append('endDate', currentFilters.endDate)
+            if (currentFilters.date) {
+                params.append('startDate', currentFilters.date)
+                params.append('endDate', currentFilters.date)
+            }
 
             const res = await fetch(`/api/dashboard/patients/${id}/historial?${params}`)
 
@@ -104,7 +105,7 @@ export default function PatientHistorial({ params }) {
 
             if (!res.ok) throw new Error("Error al eliminar consulta")
 
-            toast.success("👌 Consulta eliminada correctamente")
+            toast.success("💌 Consulta eliminada correctamente")
 
             // Recargar consultas
             window.location.reload()
@@ -116,7 +117,7 @@ export default function PatientHistorial({ params }) {
 
         } catch (err) {
             console.error(err)
-            toast.error("👎 Error al eliminar la consulta")
+            toast.error("💎 Error al eliminar la consulta")
         } finally {
             closeDeleteDialog()
         }
@@ -137,7 +138,7 @@ export default function PatientHistorial({ params }) {
 
     // Limpiar filtros
     const clearFilters = () => {
-        const newFilters = { startDate: "", endDate: "", page: 1 }
+        const newFilters = { date: "", page: 1 }
         setFilters(newFilters)
         fetchConsultations(newFilters)
     }
@@ -225,24 +226,27 @@ export default function PatientHistorial({ params }) {
         }
 
         return (
-            <div className="flex items-center justify-center space-x-2 mt-8">
+            <div className="flex items-center justify-center space-x-4 mt-8">
                 <button
                     onClick={() => changePage(current - 1)}
                     disabled={!pagination.hasPrevPage || loading}
-                    className="px-3 py-1 rounded border border-slate-300 text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="text-sky-600 disabled:opacity-50 disabled:cursor-not-allowed hover:text-sky-800 text-md font-medium transition-colors duration-200 cursor-pointer"
                 >
-                    Anterior
+                    anterior
                 </button>
 
                 {start > 1 && (
                     <>
                         <button
                             onClick={() => changePage(1)}
-                            className="px-3 py-1 rounded border border-slate-300 text-slate-600 hover:bg-slate-50"
+                            className={`px-3 py-1 rounded border transition-colors ${current === 1
+                                ? 'bg-slate-600 text-white border-slate-600'
+                                : 'border-slate-300 text-slate-600 hover:bg-slate-50'
+                                }`}
                         >
                             1
                         </button>
-                        {start > 2 && <span className="text-slate-400">...</span>}
+                        {start > 2 && <span className="text-slate-400 px-2">...</span>}
                     </>
                 )}
 
@@ -262,10 +266,13 @@ export default function PatientHistorial({ params }) {
 
                 {end < total && (
                     <>
-                        {end < total - 1 && <span className="text-slate-400">...</span>}
+                        {end < total - 1 && <span className="text-slate-400 px-2">...</span>}
                         <button
                             onClick={() => changePage(total)}
-                            className="px-3 py-1 rounded border border-slate-300 text-slate-600 hover:bg-slate-50"
+                            className={`px-3 py-1 rounded border transition-colors ${current === total
+                                ? 'bg-slate-600 text-white border-slate-600'
+                                : 'border-slate-300 text-slate-600 hover:bg-slate-50'
+                                }`}
                         >
                             {total}
                         </button>
@@ -275,9 +282,9 @@ export default function PatientHistorial({ params }) {
                 <button
                     onClick={() => changePage(current + 1)}
                     disabled={!pagination.hasNextPage || loading}
-                    className="px-3 py-1 rounded border border-slate-300 text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="text-sky-600 disabled:opacity-50 disabled:cursor-not-allowed hover:text-sky-800 text-md font-medium transition-colors duration-200 cursor-pointer"
                 >
-                    Siguiente
+                    siguiente
                 </button>
             </div>
         )
@@ -360,29 +367,17 @@ export default function PatientHistorial({ params }) {
                 </button>
             </div>
 
-            {/* Filtros de fecha */}
+            {/* Filtro por fecha */}
             <div className="border-t border-gray-400 flex justify-end items-center gap-4 pt-4">
                 <div className="flex flex-wrap items-end gap-4">
                     <div className="flex-1 max-w-40">
                         <label className="block text-sm font-medium text-slate-600 mb-1">
-                            Fecha Inicio
+                            Fecha
                         </label>
                         <input
                             type="date"
-                            name="startDate"
-                            value={filters.startDate}
-                            onChange={handleFilterChange}
-                            className="w-full border border-gray-400 px-2 py-1 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500"
-                        />
-                    </div>
-                    <div className="flex-1 max-w-40">
-                        <label className="block text-sm font-medium text-slate-600 mb-1">
-                            Fecha Fin
-                        </label>
-                        <input
-                            type="date"
-                            name="endDate"
-                            value={filters.endDate}
+                            name="date"
+                            value={filters.date}
                             onChange={handleFilterChange}
                             className="w-full border border-gray-400 px-2 py-1 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500"
                         />

@@ -26,16 +26,29 @@ export async function GET(req, { params }) {
         // Construir filtros de fecha
         let dateFilter = {}
         if (startDate && endDate) {
-            dateFilter = {
-                createdAt: {
-                    gte: new Date(startDate),
-                    lte: new Date(endDate + 'T23:59:59.999Z') // Final del día
+            // Si ambas fechas son iguales, es filtro por día específico
+            if (startDate === endDate) {
+                const startOfDay = new Date(startDate + 'T00:00:00.000Z')
+                const endOfDay = new Date(startDate + 'T23:59:59.999Z')
+                dateFilter = {
+                    createdAt: {
+                        gte: startOfDay,
+                        lte: endOfDay
+                    }
+                }
+            } else {
+                // Rango de fechas
+                dateFilter = {
+                    createdAt: {
+                        gte: new Date(startDate + 'T00:00:00.000Z'),
+                        lte: new Date(endDate + 'T23:59:59.999Z')
+                    }
                 }
             }
         } else if (startDate) {
             dateFilter = {
                 createdAt: {
-                    gte: new Date(startDate)
+                    gte: new Date(startDate + 'T00:00:00.000Z')
                 }
             }
         } else if (endDate) {
