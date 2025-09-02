@@ -33,13 +33,15 @@ export async function PUT(req, { params }) {
             sex,
             findings,
             diagnosis,
-            treatment
+            treatment,
+            actionType = 'edit' // 'edit' o 'new-consultation'
         } = data
 
         let updatedPatient = null
-        let newConsultation = null
+        let consultation = null
+        let isNewConsultation = false
 
-        // Solo actualizar datos personales si cambiaron
+        // Actualizar datos personales si cambiaron
         if (hasChanges?.personalChanged) {
             updatedPatient = await prisma.patient.update({
                 where: { id },
@@ -59,29 +61,68 @@ export async function PUT(req, { params }) {
             })
         }
 
-        // Solo crear nueva consulta si hay cambios médicos Y contenido
+        // Lógica según el tipo de acción
         if (hasChanges?.medicalChanged && (findings || diagnosis || treatment)) {
-            newConsultation = await prisma.consultation.create({
-                data: {
-                    findings: findings || "",
-                    diagnosis: diagnosis || "",
-                    treatment: treatment || "",
-                    patient: {
-                        connect: { id } // ✅ Conecta con el paciente existente
+            if (actionType === 'new-consultation') {
+                // ✅ CREAR NUEVA CONSULTA
+                consultation = await prisma.consultation.create({
+                    data: {
+                        findings: findings || "",
+                        diagnosis: diagnosis || "",
+                        treatment: treatment || "",
+                        patient: {
+                            connect: { id }
+                        },
+                        doctor: {
+                            connect: { id: doctorId }
+                        }
                     },
-                    doctor: {
-                        connect: { id: doctorId } // Conecta con el doctor
-                    }
-                },
-            })
+                })
+                isNewConsultation = true
+            } else {
+                // ✅ EDITAR ÚLTIMA CONSULTA EXISTENTE
+                const lastConsultation = await prisma.consultation.findFirst({
+                    where: { patientId: id },
+                    orderBy: { createdAt: 'desc' }
+                })
+
+                if (lastConsultation) {
+                    consultation = await prisma.consultation.update({
+                        where: { id: lastConsultation.id },
+                        data: {
+                            findings: findings || "",
+                            diagnosis: diagnosis || "",
+                            treatment: treatment || "",
+                            updatedAt: new Date()
+                        }
+                    })
+                } else {
+                    // Si no hay consulta previa, crear una nueva
+                    consultation = await prisma.consultation.create({
+                        data: {
+                            findings: findings || "",
+                            diagnosis: diagnosis || "",
+                            treatment: treatment || "",
+                            patient: {
+                                connect: { id }
+                            },
+                            doctor: {
+                                connect: { id: doctorId }
+                            }
+                        },
+                    })
+                    isNewConsultation = true
+                }
+            }
         }
 
         const response = {
             patient: updatedPatient,
-            consultation: newConsultation,
+            consultation,
             changes: {
                 personalDataUpdated: hasChanges?.personalChanged || false,
-                newConsultationCreated: hasChanges?.medicalChanged && (findings || diagnosis || treatment) || false
+                medicalDataUpdated: hasChanges?.medicalChanged && (findings || diagnosis || treatment) || false,
+                isNewConsultation
             }
         }
 

@@ -38,19 +38,6 @@ export default function HistoriaClinicaForm() {
         }
     }
 
-    function handleCancel() {
-        setForm({
-            firstName: "",
-            lastName: "",
-            age: "",
-            sex: "",
-            cedula: "",
-            findings: "",
-            diagnosis: "",
-            treatment: "",
-        })
-    }
-
     async function handleSubmit(e) {
         e.preventDefault()
 
@@ -95,7 +82,6 @@ export default function HistoriaClinicaForm() {
                 toast.success("👌 Paciente guardado correctamente")
             }
 
-            handleCancel()
             setTimeout(() => {
                 router.push(`/dashboard/patients/${patient.id}`)
             }, 1500)
@@ -218,7 +204,7 @@ export default function HistoriaClinicaForm() {
                     {renderFloatingInput(
                         "findings",
                         form.findings,
-                        "Hallazgos Clínicos",
+                        "Datos positivos al examen fisico",
                         "text",
                         "border border-gray-300 p-6 rounded focus:border-slate-500 focus:ring-2 focus:ring-slate-200 transition-colors duration-200 w-full",
                         3
@@ -252,23 +238,15 @@ export default function HistoriaClinicaForm() {
                 <button
                     type="button"
                     disabled={loading}
-                    onClick={handleCancel}
-                    className="bg-slate-400 cursor-pointer hover:bg-slate-500 text-white px-6 py-2 rounded-md font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                    Limpiar Formulario
-                </button>
-                <button
-                    type="button"
-                    disabled={loading}
                     onClick={() => router.push("/dashboard")}
-                    className="bg-slate-500 cursor-pointer hover:bg-slate-600 text-white px-6 py-2 rounded-md font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center gap-2 cursor-pointer text-slate-600 hover:text-slate-800 px-2 py-1 rounded-md font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     Cancelar
                 </button>
                 <button
                     type="submit"
                     disabled={loading}
-                    className="bg-slate-600 cursor-pointer hover:bg-slate-700 text-white px-6 py-2 rounded-md font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    className="bg-slate-600 cursor-pointer hover:bg-slate-700 text-white px-4 py-1 rounded-md font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                 >
                     {loading && (
                         <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -276,7 +254,7 @@ export default function HistoriaClinicaForm() {
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
                     )}
-                    {loading ? "Guardando..." : "Crear Paciente"}
+                    {loading ? "Guardando..." : "Guardar"}
                 </button>
             </div>
         </form>

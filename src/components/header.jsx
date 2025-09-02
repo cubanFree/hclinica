@@ -21,7 +21,7 @@ export default function Header() {
 
     return (
         <header className="w-[850px] mx-auto flex justify-between items-center text-white px-6">
-            <img src="/logo.png" alt="Logo" className="h-26 w-auto" />
+            <img onClick={() => router.push("/dashboard")} src="/logo.png" alt="Logo" className="h-26 w-auto cursor-pointer" />
 
             <AlertDialog>
                 <AlertDialogTrigger asChild>
@@ -35,8 +35,8 @@ export default function Header() {
                         <AlertDialogTitle>¿Seguro que quieres cerrar sesión?</AlertDialogTitle>
                     </AlertDialogHeader>
                     <div className="flex gap-2 justify-end">
-                        <AlertDialogCancel className={"cursor-pointer"}>Cancelar</AlertDialogCancel>
-                        <AlertDialogAction disabled={loading} className={"bg-sky-700 hover:bg-sky-800 border-sky-800 hover:border-sky-800 cursor-pointer"} onClick={(e) => handleLogout(e)}>
+                        <AlertDialogCancel className={"cursor-pointer px-4 py-1"}>Cancelar</AlertDialogCancel>
+                        <AlertDialogAction disabled={loading} className={"bg-sky-700 hover:bg-sky-800 border-sky-800 hover:border-sky-800 cursor-pointer px-4 py-1"} onClick={(e) => handleLogout(e)}>
                             {loading ? "Espera..." : "Sí, salir"}
                         </AlertDialogAction>
                     </div>
